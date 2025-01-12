@@ -1,8 +1,9 @@
 import streamlit as st
 import plotly.express as px
 from data_process import *
+#page configuration
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title='Maritime Container Trade',page_icon=':ship:',layout="wide")
 
 # 3 columns for the top row
 col1, col2, col3 = st.columns(3)
@@ -13,7 +14,7 @@ fig1 = px.choropleth(nations,
                     color='count',         # Number of ports
                     color_continuous_scale="Viridis", 
                     labels={'Ports': 'National Location Of Top 50 Ports'},
-                    title="Countries with the Most Ports")
+                    title="Geographic Location Of Top High Volume Ports")
 with col1:
     st.plotly_chart(fig1)
 # Display regional chart (as pir chart)
@@ -21,7 +22,7 @@ fig2 = px.pie(regions, names='Region', values='count', hole=0.4, title='Regions 
 with col2:
     st.plotly_chart(fig2)
 # Dsiplay historic maritime index price chart
-fig3 = px.bar(freight_cost, x='Year', y='Cost',title='Average Shipping Freight Cost Index (London Baltic Exchange)')
+fig3 = px.bar(freight_cost, x='Year', y='Cost',title='Average Shipping Freight Cost (London Baltic Exchange, Cost USD)')
 with col3:
     st.plotly_chart(fig3)
 
@@ -41,6 +42,10 @@ if selected_options:
     else:
         fig4 = px.line(select_country(national_data,selected_options))
 
+    fig4.update_layout(
+        xaxis_title='Year',
+        yaxis_title='Container Traffic (Thousands)'
+    )
     st.plotly_chart(fig4)
 else:
     st.write("Select port to display historical freight container volume")
